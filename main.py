@@ -16,3 +16,8 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 ############################################### ROUTES ###############################################
 
+@app.route("/companies/<tech>")
+def companies(tech):
+    r = requests.get("https://stackshare.io/{}".format(tech))
+    #print(r.text)
+    return r.text
