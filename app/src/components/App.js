@@ -1,6 +1,13 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
+import logo from '../logo.svg';
 import './App.css';
+import Search from './Search';
+import Topic from './Topic'
 
 class App extends Component {
   render() {
@@ -18,4 +25,12 @@ class App extends Component {
   }
 }
 
-export default App;
+const BasicExample = () => (
+  <Router>
+    <div>
+      <Route exact path="/" component={Search}/>
+      <Route path="/:topic" component={Topic} />
+    </div>
+  </Router>
+)
+export default BasicExample

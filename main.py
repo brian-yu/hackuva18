@@ -16,7 +16,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 ############################################### ROUTES ###############################################
 
-@app.route("/companies/<tech>")
+@app.route("/api/companies/<tech>")
 def companies(tech):
 	result = requests.get("https://stackshare.io/{}".format(tech))
 	r = result.content
@@ -54,6 +54,13 @@ def companies(tech):
 		companies.append(company_dict)
 	return jsonify(companies)
 
-#picture
-#company
-#link to company
+'''
+    learnxinyminutes
+    devhints
+    hackernews
+    reddit
+'''
+# use learn-anything ID
+@app.route("/api/resources/<id>")
+def tech(id):
+    return id
