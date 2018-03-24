@@ -38,7 +38,7 @@ def companies(tech):
 		if img != None:
 			a_s.append(img)
 	company_imgs = []
-	for i in range(1,10):
+	for i in range(0,10):
 		try:
 			img = a_s[i].get('src')
 			company_imgs.append(img)
