@@ -18,10 +18,41 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route("/api/companies/<tech>")
 def companies(tech):
-    r = requests.get("https://stackshare.io/{}".format(tech))
-    #print(r.text)
-    return r.text
+	result = requests.get("https://stackshare.io/{}".format(tech))
+	r = result.content
+	soup = BeautifulSoup(r, "lxml")
 
+	#finding the companies that use the tech
+	company_html = soup.find_all('a', attrs={"class": "hint--top"})
+	company_titles = []
+	for i in range(1,10):
+		company = company_html[i].get('data-hint')
+		if("News about" in company):
+			continue
+		company_titles.append(company)
+
+	#finding the images of companies that use the tech
+	a_s = []
+	for a in company_html:
+		img = a.find('img')
+		if img != None:
+			a_s.append(img)
+	company_imgs = []
+	for i in range(1,10):
+		try:
+			img = a_s[i].get('src')
+			company_imgs.append(img)
+		except:
+			continue
+
+	#creating json format
+	companies = []
+	for i in range(len(company_titles)):
+		company_dict = {}
+		company_dict["name"] = company_titles[i]
+		company_dict["image"] = company_imgs[i]
+		companies.append(company_dict)
+	return jsonify(companies)
 
 '''
     learnxinyminutes
@@ -33,4 +64,3 @@ def companies(tech):
 @app.route("/api/resources/<id>")
 def tech(id):
     return id
-
