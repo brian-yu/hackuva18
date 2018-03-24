@@ -12,57 +12,45 @@ export const SEARCH_TOPIC = 'SELECT_TOPIC'
  
 export function selectTopic(id) {
   return {
-    type: SELECT_CONGRESSMAN,
-    bid
+    type: SELECT_TOPIC,
+    id
   }
 }
- 
-export function selectState(stateAbbrev) {
-  return {
-  	type: SELECT_STATE,
-  	stateAbbrev
-  }
-}
- 
-export function reset() {
-  return { type: RESET }
-}
-
 
 /*
 * Async request/receieve/invalidate for state info
 */
 
-export const REQUEST_STATE = 'REQUEST_STATE';
-export const RECEIVE_STATE = 'RECEIVE_STATE';
-export const INVALIDATE_STATE = 'INVALIDATE_STATE';
+export const REQUEST_TOPIC = 'REQUEST_TOPIC';
+export const RECEIVE_TOPIC = 'RECEIVE_TOPIC';
+export const INVALIDATE_TOPIC = 'INVALIDATE_TOPIC';
 
-export function invalidateState(stateAbbrev) {
+export function invalidateTopic(id) {
   return {
-    type: INVALIDATE_STATE,
-    stateAbbrev
+    type: INVALIDATE_TOPIC,
+    id
   }
 }
 
 
-export function requestState(stateAbbrev) {
+export function requestTopic(id) {
 	return {
-    	type: REQUEST_STATE,
-    	stateAbbrev
+    	type: REQUEST_TOPIC,
+    	id
   	}
 }
 
-export function receiveState(stateAbbrev, json) {
+export function receiveTopic(id, json) {
 	console.log(json);
   return {
-    type: RECEIVE_STATE,
-    stateAbbrev,
+    type: RECEIVE_TOPIC,
+    id,
     data: json,
     receivedAt: Date.now()
   }
 }
 
-export function fetchState(stateAbbrev) {
+export function fetchTopic(id) {
  	// Thunk middleware knows how to handle functions.
  	// It passes the dispatch method as an argument to the function,
   	// thus making it able to dispatch actions itself.
@@ -71,7 +59,7 @@ export function fetchState(stateAbbrev) {
 		// First dispatch: the app state is updated to inform
 		// that the API call is starting.
 	 
-		dispatch(requestState(stateAbbrev))
+		dispatch(requestTopic(id))
 	 
 		// The function called by the thunk middleware can return a value,
 		// that is passed on as the return value of the dispatch method.
@@ -79,14 +67,14 @@ export function fetchState(stateAbbrev) {
 		// In this case, we return a promise to wait for.
 		// This is not required by thunk middleware, but it is convenient for us.
 
-		return fetch(`/api/state/${stateAbbrev}`)
+		return fetch(`/api/topic/${id}`)
 			.then(response => response.json())
-			.then(json => dispatch(receiveState(stateAbbrev, json)))
+			.then(json => dispatch(receiveTopic(id, json)))
 	}
 }
 
-function shouldFetchState(state, stateAbbrev) {
-	const data = state.dataByState[stateAbbrev]
+function shouldFetchTopic(state, id) {
+	const data = state.dataByTopic[id]
 	if (!data) {
 		return true
 	} else if (data.isFetching) {
@@ -96,11 +84,11 @@ function shouldFetchState(state, stateAbbrev) {
 	}
 }
 
-export function fetchStateIfNeeded(stateAbbrev) { 
-  return (dispatch, getState) => {
-    if (shouldFetchState(getState(), stateAbbrev)) {
+export function fetchTopicIfNeeded(stateAbbrev) { 
+  return (dispatch, getTopic) => {
+    if (shouldFetchTopic(getTopic(), stateAbbrev)) {
       // Dispatch a thunk from thunk!
-      return dispatch(fetchState(stateAbbrev))
+      return dispatch(fetchTopic(stateAbbrev))
     } else {
       // Let the calling code know there's nothing to wait for.
       return Promise.resolve()
@@ -176,8 +164,8 @@ function shouldFetchCongressman(state, bid) {
 }
 
 export function fetchCongressmanIfNeeded(bid) { 
-  return (dispatch, getState) => {
-    if (shouldFetchCongressman(getState(), bid)) {
+  return (dispatch, getTopic) => {
+    if (shouldFetchCongressman(getTopic(), bid)) {
       // Dispatch a thunk from thunk!
       return dispatch(fetchCongressman(bid))
     } else {
