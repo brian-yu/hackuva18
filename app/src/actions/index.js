@@ -4,7 +4,7 @@ import fetch from 'cross-fetch';
  * action types
  */
  
-export const SEARCH_TOPIC = 'SELECT_TOPIC'
+export const SELECT_TOPIC = 'SELECT_TOPIC'
  
 /*
  * action creators
