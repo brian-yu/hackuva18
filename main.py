@@ -63,4 +63,5 @@ def companies(tech):
 # use learn-anything ID
 @app.route("/api/resources/<id>")
 def tech(id):
+	
     return id
