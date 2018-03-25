@@ -54,7 +54,7 @@ def topic(id):
 			if len(p.text) > 100:
 				firstsent = p.text.split(".")[0]
 				break
-		print(firstsent)
+		# print(firstsent)
 		while "[" in firstsent:
 			firstsent = firstsent[:firstsent.find("[")-1]+firstsent[firstsent.find("]")+1:]
 		while "(" in firstsent:
