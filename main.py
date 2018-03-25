@@ -37,10 +37,10 @@ def topic(id):
 	r = result.text
 	data = json.loads(r)
 
-	#get the wikipedia link from end of the wikiwand link
 	nodeid = data["nodes"]["null"]["nodeID"]
 	i = 0
 	try:
+		#get the wikipedia link from end of the wikiwand link
 		while(data["resources"][str(nodeid)][i]["url"].find("wiki") == -1):
 			i += 1
 		wiki = data["resources"][str(nodeid)][i]["url"].split("/")[-1]
@@ -49,25 +49,29 @@ def topic(id):
 
 		#get the first paragraph text
 		div = soup.find("div", class_="mw-parser-output")
-		firstp = div.find("p")
-		firstsent = firstp.text.split(".")[0]
-		if "[" in firstsent:
-			firstsent = firstsent[:firstsent.find("[")-1]+firstsent[firstsent.find("[")+3:]
+		firstp = div.find_all("p")
+		for p in firstp:
+			if len(p.text) > 100:
+				firstsent = p.text.split(".")[0]
+				break
+		print(firstsent)
+		while "[" in firstsent:
+			firstsent = firstsent[:firstsent.find("[")-1]+firstsent[firstsent.find("]")+1:]
+		while "(" in firstsent:
+			firstsent = firstsent[:firstsent.find("(")-1]+firstsent[firstsent.find(")")+1:]	
 		firstsent += "."
 
-		
-
 	except:
-		firstsent = "no summary"
+		firstsent = "no summary available"
 	
 	resources_and_related = resources(id, data)
-	company_list = companies(data["key"].replace(" ", ""))
+	company_list = companies(data["key"])
 	all_data = {}
 	all_data["name"] = data["key"]
 	all_data["wiki"] = firstsent
 	all_data["companies"] = company_list
 	all_data["resources"] = resources_and_related
-	# print(data)
+
 	return jsonify(all_data)
 
 def resources(id, data):
@@ -82,6 +86,7 @@ def resources(id, data):
 	types = []
 	related_titles = []
 	related_id = []
+	passed = 0
 	while(True):
 		"""
 		iterates through every resource and related topic,
@@ -89,28 +94,35 @@ def resources(id, data):
 		"""
 		try:
 			resources_json[str(nodeid)]
+			for resource in resources_json[str(nodeid)]:
+				url = resource["url"]
+				if "http" not in url: #it's a related resource
+					#get the id from the api keyword search
+					search = resource["url"].strip()
+					hl = requests.get("http://learn-anything.xyz/api/maps/{}".format(search))
+					rjson = hl.text
+					ref = json.loads(rjson)
+					refid = ref["mapID"]
+					reftext = ref["key"]
+					#append into the two "related" lists
+					related_id.append(refid)
+					related_titles.append(reftext)
+					continue
+				links.append(url)
+				text = resource["text"]
+				if "wiki" in url:
+					text += " Wikipedia"
+				titles.append(text)
+				try:
+					types.append(resource["category"])
+				except:
+					types.append("N/A")
+				passed = 0
 		except:
-			break
-		for resource in resources_json[str(nodeid)]:
-			url = resource["url"]
-			if "http" not in url:
-				#get the id from the api keyword search
-				text = resource["text"].strip()
-				hl = requests.get("https://learn-anything.xyz/api/maps?q={}".format(text))
-				rjson = hl.text
-				ref = json.loads(rjson)
-				refid = ref[0]["id"]
-				reftext = ref[0]["key"]
-				#append into the two "related" lists
-				related_id.append(refid)
-				related_titles.append(reftext)
-				continue
-			links.append(url)
-			titles.append(resource["text"])
-			try:
-				types.append(resource["category"])
-			except:
-				types.append("N/A")
+			passed += 1
+			if passed >= 5:
+				break
+		
 		nodeid += 1
 
 	#adding to a dictionary for JSON
@@ -132,12 +144,14 @@ def resources(id, data):
 	resources_full["related"] = related
 	return resources_full
 
+
 @app.route("/api/companies/<tech>")
 def companies(tech):
 	"""
 	Returns companies that use a technology in JSON format
 	if the search term is not found, returns a blank string
 	"""
+	tech = tech.split()[0]
 	result = requests.get("https://stackshare.io/{}".format(tech))
 	r = result.content
 	soup = BeautifulSoup(r, "lxml")
