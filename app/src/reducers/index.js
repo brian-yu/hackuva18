@@ -11,7 +11,7 @@ import {
 function topic(state = null, action) {
   switch (action.type) {
     case SELECT_TOPIC:
-      return action.id
+      return action.topicId
     case RESET:
       return null
     default:
@@ -56,7 +56,7 @@ function dataByTopic(state = {}, action) {
     case RECEIVE_TOPIC:
     case REQUEST_TOPIC:
       return Object.assign({}, state, {
-        [action.id]: topicData(state[action.id], action)
+        [action.topicId]: topicData(state[action.topicId], action)
       })
     default:
       return state

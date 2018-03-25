@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import {Jumbotron, Label, Col, Row, Input, InputGroup, InputGroupAddon, Button} from 'reactstrap';
+import {Jumbotron} from 'reactstrap';
 import './Search.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import fetch from 'cross-fetch';
+import Select from 'react-select';
+import {Redirect} from 'react-router';
 
 class Search extends Component {
 
@@ -9,51 +11,61 @@ class Search extends Component {
     super(props);
     this.state = {
       query: "",
-      hasEntered: false,
+      topic: ""
     };
-
+    console.log(this.state)
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-	handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value,
-      hasEntered: false,
-    });
+	handleInputChange(item) {
+    console.log(item)
+    this.props.selectTopic(item.id)
+    this.props.fetchTopicIfNeeded(item.id)
   }
 
-  handleSubmit(event) {
-  	if (this.state.query !== "") {
-  		alert('A query was submitted: ' + this.state.query);
-  	}
-    event.preventDefault();
-  }
+  getTopics(input) {
+		if (!input) {
+			return Promise.resolve({ options: [] });
+		}
 
+		return fetch(`/api/topic/name/${input}`)
+			.then(response => response.json())
+			.then(json => {
+				return { options: json.slice(0, 5)}
+			});
+	}
 
   render() {
     return (
     	<div>
-    		<Jumbotron id="splash">
-    		Teach me about
-    		<form onSubmit={this.handleSubmit}>
-    			<input
+    		<div id="splash">
+    		<div>Teach me about</div>
+    		<form onSubmit={this.handleSubmit} style={{display: "inline-block"}} style={{ display: 'inline-block'}}>
+{/*    			<input
           	id="search"
           	name="query"
           	value={this.state.query}
             onChange={this.handleInputChange}
             size={this.state.query.length > 5 ? this.state.query.length : 5}
-          />
-          <span>.</span>
+          />*/}
+          <Select.Async
+          	value={this.state.query}
+          	onChange={this.handleInputChange}
+          	valueKey="id"
+          	labelKey="key"
+          	loadOptions={this.getTopics}
+          	searchPromptText=""
+          	autosize={this.state.query.length >= 5 ? true : false}
+					/>
+          {/*<span>.</span>*/}
 	          
 {/*	          <InputGroupAddon addonType="prepend"><Button type="submit"><FontAwesomeIcon icon='bolt'/></Button></InputGroupAddon>*/}
 
         </form>
-        </Jumbotron>
+        {this.state.topic && (
+			    <Redirect to={`/${this.state.topic}`}/>
+			  )}
+        </div>
 			</div>
     )
   }

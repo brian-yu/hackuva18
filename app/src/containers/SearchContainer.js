@@ -9,16 +9,13 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   selectTopic: selectTopic,
-  onStateClick: selectState,
-  fetchStateIfNeeded: fetchStateIfNeeded,
-  fetchCongressmanIfNeeded: fetchCongressmanIfNeeded,
+  fetchTopicIfNeeded: fetchTopicIfNeeded,
   reset: reset,
-  // onMapModification: modifyMap,
 }
 
-const MapContainer = connect(
+const SearchContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Map);
+)(Search);
 
-export default MapContainer;
+export default SearchContainer;

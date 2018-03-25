@@ -81,3 +81,18 @@ def tech(id):
 	if "[" in firstsent:
 		firstsent = firstsent[:firstsent.find("[")-1]+firstsent[firstsent.find("[")+3:]
 	return firstsent + "."
+
+@app.route("/api/topic/name/<name>")
+def findId(name):
+	res = requests.get("https://learn-anything.xyz/api/maps?q={}".format(name))
+	# return jsonify(res.text)
+
+	return app.response_class(
+        response=res.text,
+        status=200,
+        mimetype='application/json'
+    )
+
+@app.route("/api/topic/<id>")
+def topic(id):
+	return ""
