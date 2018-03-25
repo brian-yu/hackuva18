@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { selectTopic, fetchTopicIfNeeded, reset } from '../actions';
-import Search from '../components/Search';
+import { reset } from '../actions';
+import Navbar from '../components/Navbar';
 import { withRouter } from 'react-router-dom'
 
 const mapStateToProps = (state) => ({
@@ -9,16 +9,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  selectTopic: selectTopic,
-  fetchTopicIfNeeded: fetchTopicIfNeeded,
-  reset: reset,
+  reset: reset
 }
 
-const SearchContainer = withRouter(connect(
+const NavbarContainer = withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search));
+)(Navbar));
 
-export default SearchContainer;
+export default NavbarContainer;
 
 // export default withRouter(connect(mapStateToProps)(Something))

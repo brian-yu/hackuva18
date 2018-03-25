@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {Jumbotron} from 'reactstrap';
 import './Search.css';
 import fetch from 'cross-fetch';
 import Select from 'react-select';
@@ -11,16 +10,18 @@ class Search extends Component {
     super(props);
     this.state = {
       query: "",
-      topic: ""
+      searched: false,
     };
-    console.log(this.state)
+    console.log("state:", this.state)
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
 	handleInputChange(item) {
-    console.log(item)
     this.props.selectTopic(item.id)
     this.props.fetchTopicIfNeeded(item.id)
+    this.setState({
+    	searched:true
+    })
   }
 
   getTopics(input) {
@@ -36,11 +37,16 @@ class Search extends Component {
 	}
 
   render() {
+  	console.log("props:", this.props)
+  	if (this.state.searched) {
+  		console.log("switch")
+  		return (<Redirect to={`/topic/${this.props.topic}`}/>)
+  	}
     return (
     	<div>
     		<div id="splash">
     		<div>Teach me about</div>
-    		<form onSubmit={this.handleSubmit} style={{display: "inline-block"}} style={{ display: 'inline-block'}}>
+    		<form onSubmit={this.handleSubmit} style={{ display: 'inline-block'}}>
 {/*    			<input
           	id="search"
           	name="query"
@@ -62,9 +68,6 @@ class Search extends Component {
 {/*	          <InputGroupAddon addonType="prepend"><Button type="submit"><FontAwesomeIcon icon='bolt'/></Button></InputGroupAddon>*/}
 
         </form>
-        {this.state.topic && (
-			    <Redirect to={`/${this.state.topic}`}/>
-			  )}
         </div>
 			</div>
     )

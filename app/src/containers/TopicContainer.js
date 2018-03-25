@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { selectTopic, fetchTopicIfNeeded, reset } from '../actions';
-import Search from '../components/Search';
+import Topic from '../components/Topic';
 import { withRouter } from 'react-router-dom'
 
 const mapStateToProps = (state) => ({
@@ -14,11 +14,11 @@ const mapDispatchToProps = {
   reset: reset,
 }
 
-const SearchContainer = withRouter(connect(
+const TopicContainer = withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search));
+)(Topic));
 
-export default SearchContainer;
+export default TopicContainer;
 
 // export default withRouter(connect(mapStateToProps)(Something))

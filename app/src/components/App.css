@@ -4,6 +4,24 @@
   color: white;
 }
 
+.navbar a {
+  text-decoration: none;
+  color: white;
+}
+
+.navbar a:link {
+    text-decoration: none;
+}
+
+.navbar a:visited {
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    text-decoration: none;
+    color: grey;
+}
+
 .brand {
   font-size: 2em;
 }
