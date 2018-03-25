@@ -70,7 +70,13 @@ def tech(id):
 
 	#get the wikipedia link from end of the wikiwand link
 	nodeid = data["nodes"]["null"]["nodeID"]
-	wiki = data["resources"][str(nodeid)][0]["url"].split("/")[-1]
+	i = 0
+	try:
+		while(data["resources"][str(nodeid)][i]["url"].find("wiki") == -1):
+			i += 1
+	except:
+		return "No Wiki"
+	wiki = data["resources"][str(nodeid)][i]["url"].split("/")[-1]
 	url = urllib.request.urlopen("https://wikipedia.org/wiki/{}".format(wiki))
 	soup = BeautifulSoup(url)
 
