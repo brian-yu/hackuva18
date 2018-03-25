@@ -65,6 +65,7 @@ class Topic extends Component {
 
   render() {
   	if (this.props.dataByTopic[this.props.topic] && !this.props.dataByTopic[this.props.topic].isFetching) {
+  		document.title = `Delve into ${this.titleCase(this.props.dataByTopic[this.props.topic].data.name)}`;
   		return (
 	    	<div>
 	    		<h1>{this.titleCase(this.props.dataByTopic[this.props.topic].data.name)}</h1>
