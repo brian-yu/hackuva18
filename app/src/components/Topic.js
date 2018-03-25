@@ -34,6 +34,14 @@ class Topic extends Component {
   	);
 	}
 
+	CompanyItem = (props) => {
+		return (
+  		<li>
+  			<img src={props.image}/>
+  		</li>
+  	);
+	}
+
 	ResourceList = (props) => {
 	  const resources = props.data.resources.resources;
 	  var i = 0;
@@ -64,6 +72,21 @@ class Topic extends Component {
 	  );
 	}
 
+	CompanyList = (props) => {
+		const companies = props.data.companies;
+		var i = 0;
+	  return (
+	    <ul>
+	      {companies.map((company) =>
+	        <this.CompanyItem key={i++}
+	                  image={company.image}
+	                  name={company.name}/>
+
+	      )}
+	    </ul>
+	  );
+	}
+
   render() {
   	if (this.props.dataByTopic[this.props.topic] && !this.props.dataByTopic[this.props.topic].isFetching) {
   		document.title = `Delve into ${this.titleCase(this.props.dataByTopic[this.props.topic].data.name)}`;
@@ -77,6 +100,8 @@ class Topic extends Component {
 	    		<this.ResourceList data={this.props.dataByTopic[this.props.topic].data}/>
 	    		<h3>Related</h3>
 	    		<this.RelatedList data={this.props.dataByTopic[this.props.topic].data}/>
+	    		<h3>Companies</h3>
+	    		<this.CompanyList data={this.props.dataByTopic[this.props.topic].data}/>
 
 	    	</div>
     	)
