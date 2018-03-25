@@ -5,3 +5,18 @@
 #companies img {
 	height: 75px;
 }
+#resources li {
+	list-style-type: none;
+}
+
+#resources svg {
+	margin-right: 10px;
+}
+
+#related li {
+	list-style-type: none;
+}
+
+#related svg {
+	margin-right: 10px;
+}

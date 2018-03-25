@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import brands from '@fortawesome/fontawesome-free-brands'
+import solids from '@fortawesome/fontawesome-free-solid'
 import './Topic.css'
 
 class Topic extends Component {
@@ -18,14 +21,32 @@ class Topic extends Component {
 
 
 	ListURL = (props) => {
-  // Correct! There is no need to specify the key here:
-  	return <li><a href={props.url}>{props.text}</a></li>;
-	}
+		const typeMap = {
+  		github: ["fab", "github"],
+  		reddit: ["fab", "reddit"],
+  		wiki: ["fab", "wikipedia-w"],
+  		video: ["fas", "video"],
+  		"free book": "book"
+  	}
 
-	ListLink = (props) => {
-  // Correct! There is no need to specify the key here:
+  	const faname = typeMap[props.type] ? typeMap[props.type] : "external-link-alt";
+  	console.log(faname);
+  	const Icon = () => {
+  		return <FontAwesomeIcon icon={faname}/>;
+  	}
+
   	return (
   		<li>
+  			<Icon/>
+  			<a href={props.url}>{props.text}</a>
+  		</li>
+  	);
+	}
+
+	ListLink = (props) => { 
+  	return (
+  		<li>
+  			<FontAwesomeIcon icon="link"/>
   			<Link to={`/topic/${props.id}`} onClick={(props)=> {
   				this.props.selectTopic(props.id)
     			this.props.fetchTopicIfNeeded(props.id)
@@ -47,14 +68,18 @@ class Topic extends Component {
 	  const resources = props.data.resources.resources;
 	  var i = 0;
 	  return (
-	    <ul>
-	      {resources.map((resource) =>
-	        <this.ListURL key={i++}
-	                  text={resource.text}
-	                  url={resource.url}/>
+	  	<div id="resources">
+		  	<h3>Resources</h3>
+		    <ul>
+		      {resources.map((resource) =>
+		        <this.ListURL key={i++}
+		                  text={resource.text}
+		                  url={resource.url}
+		                  type={resource.category}/>
 
-	      )}
-	    </ul>
+		      )}
+		    </ul>
+	    </div>
 	  );
 	}
 
@@ -103,10 +128,7 @@ class Topic extends Component {
 	    		<p>
 	    			{this.props.dataByTopic[this.props.topic].data.wiki}
 	    		</p>
-	    		<div>
-	    			<h3>Resources</h3>
-	    			<this.ResourceList data={this.props.dataByTopic[this.props.topic].data}/>
-	    		</div>
+	    		<this.ResourceList data={this.props.dataByTopic[this.props.topic].data}/>
 	    		<this.RelatedList data={this.props.dataByTopic[this.props.topic].data}/>
 	    		<this.CompanyList data={this.props.dataByTopic[this.props.topic].data}/>
 	    	</div>
