@@ -96,7 +96,7 @@ def tech(id):
 	return firstsent + "."
 
 @app.route("/api/test/<id>")
-def resource(id):
+def resources(id):
 	"""
 	given id of a topic, return the learning resources of the topic
 	"""
@@ -104,12 +104,19 @@ def resource(id):
 	r = result.text
 	data = json.loads(r)
 
+	#setting up to parse
 	nodeid = data["nodes"]["null"]["nodeID"]
 	resources_json = data["resources"]
 	titles = []
 	links = []
 	types = []
+	related_titles = []
+	related_links = []
 	while(True):
+		"""
+		iterates through every resource and related topic,
+		adding to the appropriate list
+		"""
 		try:
 			resources_json[str(nodeid)]
 		except:
@@ -117,6 +124,8 @@ def resource(id):
 		for resource in resources_json[str(nodeid)]:
 			url = resource["url"]
 			if "https" not in url:
+				related_links.append(url)
+				related_titles.append(resource["text"])
 				continue
 			links.append(url)
 			titles.append(resource["text"])
@@ -126,6 +135,8 @@ def resource(id):
 				types.append("N/A")
 		nodeid += 1
 
+	#adding to a dictionary for JSON
+	resources_full = {}
 	resources = []
 	for i in range(len(titles)):
 		resource_dict = {}
@@ -133,10 +144,12 @@ def resource(id):
 		resource_dict["url"] = links[i]
 		resource_dict["category"] = types[i]
 		resources.append(resource_dict)
-	return jsonify(resources)
-		
-
-def related(id):
-	"""
-	given id of a topic, return the related topics
-	"""
+	related = []
+	for i in range(len(related_titles)):
+		related_dict = {}
+		related_dict["text"] = related_titles[i]
+		related_dict["url"] = related_links[i]
+		related.append(related_dict)
+	resources_full["resources"] = resources
+	resources_full["related"] = related
+	return jsonify(resources_full)
