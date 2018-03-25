@@ -54,7 +54,6 @@ def topic(id):
 			if len(p.text) > 100:
 				firstsent = p.text.split(".")[0]
 				break
-		# print(firstsent)
 		while "[" in firstsent:
 			firstsent = firstsent[:firstsent.find("[")-1]+firstsent[firstsent.find("]")+1:]
 		while "(" in firstsent:
@@ -62,7 +61,7 @@ def topic(id):
 		firstsent += "."
 
 	except:
-		firstsent = "no summary available"
+		firstsent = ""
 	
 	resources_and_related = resources(id, data)
 	company_list = companies(data["key"])
