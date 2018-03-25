@@ -6,6 +6,7 @@ from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
 from random import randint
+import urllib.request
 
 ############################################### CONFIG ###############################################
 
@@ -63,5 +64,20 @@ def companies(tech):
 # use learn-anything ID
 @app.route("/api/resources/<id>")
 def tech(id):
-	
-    return id
+	result = requests.get("https://learn-anything.xyz/api/maps/{}".format(id))
+	r = result.text
+	data = json.loads(r)
+
+	#get the wikipedia link from end of the wikiwand link
+	nodeid = data["nodes"]["null"]["nodeID"]
+	wiki = data["resources"][str(nodeid)][0]["url"].split("/")[-1]
+	url = urllib.request.urlopen("https://wikipedia.org/wiki/{}".format(wiki))
+	soup = BeautifulSoup(url)
+
+	#get the first paragraph text
+	div = soup.find("div", class_="mw-parser-output")
+	firstp = div.find("p")
+	firstsent = firstp.text.split(".")[0]
+	if "[" in firstsent:
+		firstsent = firstsent[:firstsent.find("[")-1]+firstsent[firstsent.find("[")+3:]
+	return firstsent + "."
