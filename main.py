@@ -21,7 +21,7 @@ def companies(tech):
 	result = requests.get("https://stackshare.io/{}".format(tech))
 	r = result.content
 	soup = BeautifulSoup(r, "lxml")
-
+	
 	#finding the companies that use the tech
 	company_html = soup.find_all('a', attrs={"class": "hint--top"})
 	company_titles = []

@@ -5,6 +5,7 @@ import fetch from 'cross-fetch';
  */
  
 export const SELECT_TOPIC = 'SELECT_TOPIC'
+export const RESET = 'RESET'
  
 /*
  * action creators
@@ -14,6 +15,12 @@ export function selectTopic(id) {
   return {
     type: SELECT_TOPIC,
     id
+  }
+}
+
+export function reset() {
+  return {
+    type: RESET,
   }
 }
 
