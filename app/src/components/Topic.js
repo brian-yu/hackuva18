@@ -38,6 +38,7 @@ class Topic extends Component {
 		return (
   		<li>
   			<img src={props.image}/>
+  			<h5>{props.name}</h5>
   		</li>
   	);
 	}
@@ -96,12 +97,18 @@ class Topic extends Component {
 	    		<p>
 	    			{this.props.dataByTopic[this.props.topic].data.wiki}
 	    		</p>
-	    		<h3>Resources</h3>
-	    		<this.ResourceList data={this.props.dataByTopic[this.props.topic].data}/>
-	    		<h3>Related</h3>
-	    		<this.RelatedList data={this.props.dataByTopic[this.props.topic].data}/>
-	    		<h3>Companies</h3>
-	    		<this.CompanyList data={this.props.dataByTopic[this.props.topic].data}/>
+	    		<div>
+	    			<h3>Resources</h3>
+	    			<this.ResourceList data={this.props.dataByTopic[this.props.topic].data}/>
+	    		</div>
+	    		<div>
+	    			<h3>Related</h3>
+	    			<this.RelatedList data={this.props.dataByTopic[this.props.topic].data}/>
+	    		</div>
+	    		<div id="companies">
+	    			<h3>Companies</h3>
+	    			<this.CompanyList data={this.props.dataByTopic[this.props.topic].data}/>
+	    		</div>
 
 	    	</div>
     	)
