@@ -2,6 +2,22 @@
 	padding: 30px;
 }
 
+#topic resources{
+	background-color: #a2ccbe;
+	padding: 10px;
+}
+
 #companies img {
 	height: 75px;
+}
+
+#companies li {
+	list-style-type: none;
+	float: left;
+	padding: 0px 30px;
+	text-align: center;
+}
+
+#companies ul{
+	display: inline;
 }
