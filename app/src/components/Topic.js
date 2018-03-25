@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import './Topic.css'
 
 class Topic extends Component {
 
@@ -67,7 +68,7 @@ class Topic extends Component {
   	if (this.props.dataByTopic[this.props.topic] && !this.props.dataByTopic[this.props.topic].isFetching) {
   		document.title = `Delve into ${this.titleCase(this.props.dataByTopic[this.props.topic].data.name)}`;
   		return (
-	    	<div>
+	    	<div id="topic">
 	    		<h1>{this.titleCase(this.props.dataByTopic[this.props.topic].data.name)}</h1>
 	    		<p>
 	    			{this.props.dataByTopic[this.props.topic].data.wiki}
