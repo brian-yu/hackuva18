@@ -19,6 +19,9 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route("/api/companies/<tech>")
 def companies(tech):
+	"""
+	Returns companies that use a technology in JSON format
+	"""
 	result = requests.get("https://stackshare.io/{}".format(tech))
 	r = result.content
 	soup = BeautifulSoup(r, "lxml")
@@ -64,6 +67,10 @@ def companies(tech):
 # use learn-anything ID
 @app.route("/api/resources/<id>")
 def tech(id):
+	"""
+	given id of a topic, returns the first sentence of a wikipedia article
+	about that topic
+	"""
 	result = requests.get("https://learn-anything.xyz/api/maps/{}".format(id))
 	r = result.text
 	data = json.loads(r)
@@ -81,3 +88,49 @@ def tech(id):
 	if "[" in firstsent:
 		firstsent = firstsent[:firstsent.find("[")-1]+firstsent[firstsent.find("[")+3:]
 	return firstsent + "."
+
+@app.route("/api/test/<id>")
+def resource(id):
+	"""
+	given id of a topic, return the learning resources of the topic
+	"""
+	result = requests.get("https://learn-anything.xyz/api/maps/{}".format(id))
+	r = result.text
+	data = json.loads(r)
+
+	nodeid = data["nodes"]["null"]["nodeID"]
+	resources_json = data["resources"]
+	titles = []
+	links = []
+	types = []
+	while(True):
+		try:
+			resources_json[str(nodeid)]
+		except:
+			break
+		for resource in resources_json[str(nodeid)]:
+			url = resource["url"]
+			if "https" not in url:
+				continue
+			links.append(url)
+			titles.append(resource["text"])
+			try:
+				types.append(resource["category"])
+			except:
+				types.append("N/A")
+		nodeid += 1
+
+	resources = []
+	for i in range(len(titles)):
+		resource_dict = {}
+		resource_dict["text"] = titles[i]
+		resource_dict["url"] = links[i]
+		resource_dict["category"] = types[i]
+		resources.append(resource_dict)
+	return jsonify(resources)
+		
+
+def related(id):
+	"""
+	given id of a topic, return the related topics
+	"""
