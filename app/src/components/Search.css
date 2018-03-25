@@ -42,7 +42,8 @@
 	border-radius: 0;
 	color: white;
 	text-align: center;
+	padding-top: 25vh;
 	font-size: 3em;
 	font-family: "Airport Mono";
-	height: 50vh;
+	height: 100vh;
 }
