@@ -82,8 +82,8 @@ class Topic extends Component {
     	)
   	}
     return (
-    	<div>
-    		LOADING
+    	<div id="topic">
+    		<h1>Loading...</h1>
     	</div>
     )
   }

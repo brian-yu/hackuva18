@@ -29,6 +29,10 @@
 	font-size: .6em;
 }
 
+.Select-option:hover{
+	color: grey;
+}
+
 /*.Select-control {
 	width: auto;
 }*/
